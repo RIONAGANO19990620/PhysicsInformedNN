@@ -5,6 +5,9 @@ from matplotlib import pyplot as plt
 
 from Rungekutta.Model.Mesh import Mesh
 from Rungekutta.Model.RungeKutta import RungeKutta
+from Rungekutta.Model.Term.D1Dx import D1Dx
+from Rungekutta.Model.Term.D2Dx import D2Dx
+from Rungekutta.Model.Term.D3Dx import D3Dx
 from Rungekutta.Model.Term.Term import Term
 
 
@@ -44,3 +47,38 @@ class Util:
                 plt.plot(Util.mesh.x_array, teacher_data_reshaped[t_n], label=f" t={str(Util.mesh.t_array[t_n])[:4]}")
         plt.legend()
         plt.show()
+
+
+class GetRungekuttaData:
+
+    @staticmethod
+    def get_advection():
+        term_list = [D1Dx(- Util.a)]
+        data = Util.get_data(term_list)
+        teacher_data = Util.get_teacher_data(term_list)
+        Util.plot_teacher_data(teacher_data)
+        return teacher_data, data
+
+    @staticmethod
+    def get_advection_diffusion():
+        term_list = [D1Dx(- Util.a), D2Dx(Util.b)]
+        data = Util.get_data(term_list)
+        teacher_data = Util.get_teacher_data(term_list)
+        Util.plot_teacher_data(teacher_data)
+        return teacher_data, data
+
+    @staticmethod
+    def get_burgers():
+        term_list = [D1Dx(Util.a, True), D2Dx(Util.b)]
+        data = Util.get_data(term_list)
+        teacher_data = Util.get_teacher_data(term_list)
+        Util.plot_teacher_data(teacher_data)
+        return teacher_data, data
+
+    @staticmethod
+    def get_kdv():
+        term_list = [D1Dx(-Util.a, True), D3Dx(-Util.b)]
+        data = Util.get_data(term_list)
+        teacher_data = Util.get_teacher_data(term_list)
+        Util.plot_teacher_data(teacher_data)
+        return teacher_data, data
