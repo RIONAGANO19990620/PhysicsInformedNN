@@ -1,6 +1,7 @@
+import numpy as np
 from matplotlib import pyplot as plt
-from tensorflow.python.keras import Input, Model
-from tensorflow.python.keras.layers import concatenate, Dense
+from tensorflow.keras import Model
+from tensorflow.keras.layers import concatenate, Dense, Input
 
 from Model import PPINs
 
@@ -12,6 +13,7 @@ class PhysicsInformedNN:
         self.x_array = x_array
         self.t_array = t_array
         self.teacher_data = teacher_data
+        self.teacher_data_max = self.teacher_data.max()
 
     def __initial_NN(self):
         input1 = Input(shape=(1,))
@@ -27,11 +29,12 @@ class PhysicsInformedNN:
         z = Dense(1, activation="tanh")(z)
 
         self.model = PPINs([x.input, y.input], z)
-        self.model.compile(optimizer="adam", metrics=['loss', 'mae', 'a', 'b'])
+        self.model.compile(optimizer="adam", metrics=['loss', 'mae'])
 
     def train(self, epochs=100):
         input_data = self.__get_input_data()
-        self.history = self.model.fit(input_data, self.teacher_data, epochs=epochs, verbose=0)
+        teacher_data = self.teacher_data / self.teacher_data_max
+        self.history = self.model.fit(input_data, teacher_data, epochs=epochs)
 
     def plot_coefficient(self):
         plt.plot(self.history.history['a'], label='a')
@@ -47,8 +50,8 @@ class PhysicsInformedNN:
         X, T = np.meshgrid(x, t)
         return [X.flatten()[:, None], T.flatten()[:, None]]
 
-    def plot_u(self, data, title):
-        u_pred = self.model.predict(self.__get_input_data())
+    def save_plot_u(self, data, title):
+        u_pred = self.teacher_data_max * self.model.predict(self.__get_input_data())
         u_pred_reshaped = u_pred.reshape(len(self.t_array), len(self.x_array))
         for t_n in range(len(self.t_array)):
             plt.title(title)
@@ -59,8 +62,21 @@ class PhysicsInformedNN:
                 plt.plot(self.x_array, u_pred_reshaped[t_n], linestyle='-.', color='blue')
         plt.plot(self.x_array, data[t_n], label='numerical calculation', linestyle='--', color='red')
         plt.plot(self.x_array, u_pred_reshaped[t_n], label='neural network', linestyle='-.', color='blue')
+        plt.savefig('{}.png'.format(title))
+        plt.close()
+        plt.clf()
+
+    def save_print_coeffisient(self, title):
+        plt.title(title)
+        plt.plot(self.history.history['a'], label='a')
+        plt.plot(self.history.history['b'], label='b')
+        plt.plot(self.history.history['c'], label='c')
+        plt.plot(self.history.history['d'], label='d')
+        plt.xlabel('train_num')
         plt.legend()
-        plt.show()
+        plt.savefig('{}_coeffisient.png'.format(title))
+        plt.close()
+        plt.clf()
 
     def print_coeffisient(self):
         print('a={0}, b={1}, c={2}, d={3}'.format(self.model.a.numpy(), self.model.b.numpy(), self.model.c.numpy(),

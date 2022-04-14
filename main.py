@@ -1,16 +1,23 @@
-# This is a sample Python script.
+from GetRungekuttaData import Util, GetRungekuttaData
+from PhysicsInformedNN import PhysicsInformedNN
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+x_array = Util.mesh.x_array
+t_array = Util.mesh.t_array
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def pred_advection(train_num=1000):
+    teacher_data, data = GetRungekuttaData.get_advection()
+    advection = PhysicsInformedNN(x_array, t_array, teacher_data)
+    advection.train(train_num)
+    advection.print_coeffisient()
+    advection.save_plot_u(data, 'advection')
+    advection.save_print_coeffisient('advection')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+def pred_kdv(train_num=10000):
+    teacher_data, data = GetRungekuttaData.get_kdv()
+    kdv = PhysicsInformedNN(x_array, t_array, teacher_data)
+    kdv.train(train_num)
+    kdv.print_coeffisient()
+    kdv.save_plot_u(data, 'kdv')
+    kdv.save_print_coeffisient('kdv')
