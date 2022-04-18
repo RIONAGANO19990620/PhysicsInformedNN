@@ -21,3 +21,6 @@ def pred_kdv(train_num=10000):
     kdv.print_coeffisient()
     kdv.save_plot_u(data, 'kdv')
     kdv.save_print_coeffisient('kdv')
+
+if __name__ == '__main__':
+    pred_kdv()

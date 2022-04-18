@@ -56,7 +56,7 @@ class GetRungekuttaData:
         term_list = [D1Dx(- Util.a)]
         data = Util.get_data(term_list)
         teacher_data = Util.get_teacher_data(term_list)
-        Util.plot_teacher_data(teacher_data)
+#        Util.plot_teacher_data(teacher_data)
         return teacher_data, data
 
     @staticmethod
@@ -64,7 +64,7 @@ class GetRungekuttaData:
         term_list = [D1Dx(- Util.a), D2Dx(Util.b)]
         data = Util.get_data(term_list)
         teacher_data = Util.get_teacher_data(term_list)
-        Util.plot_teacher_data(teacher_data)
+ #       Util.plot_teacher_data(teacher_data)
         return teacher_data, data
 
     @staticmethod
@@ -72,7 +72,7 @@ class GetRungekuttaData:
         term_list = [D1Dx(Util.a, True), D2Dx(Util.b)]
         data = Util.get_data(term_list)
         teacher_data = Util.get_teacher_data(term_list)
-        Util.plot_teacher_data(teacher_data)
+#        Util.plot_teacher_data(teacher_data)
         return teacher_data, data
 
     @staticmethod
@@ -80,5 +80,5 @@ class GetRungekuttaData:
         term_list = [D1Dx(-Util.a, True), D3Dx(-Util.b)]
         data = Util.get_data(term_list)
         teacher_data = Util.get_teacher_data(term_list)
-        Util.plot_teacher_data(teacher_data)
+#        Util.plot_teacher_data(teacher_data)
         return teacher_data, data
