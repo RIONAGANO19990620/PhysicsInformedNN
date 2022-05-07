@@ -10,7 +10,7 @@ from Rungekutta.Model.Term.D3Dx import D3Dx
 
 
 class TestAdvection(unittest.TestCase):
-    X_max = 10
+    X_max = 50
     X_mesh = 100
     T_max = 8
     T_change = 200  # 時間方向のメッシュ数を増加するために任意の値を使用 T_mesh = 100 * T_change
@@ -52,8 +52,8 @@ class TestAdvection(unittest.TestCase):
         plt.show()
 
     def test_kdv(self):
-        a = 1
-        b = 0.1
+        a = 2.5
+        b = 5
         first_data = np.exp(-(self.x_array - self.X_max // 2) ** 2 /4)
         term_list = [D1Dx(-a, True), D3Dx(-b)]
         data = RungeKutta.solve(term_list, first_data, self.T_mesh, self.T_change, self.dt, self.dx)

@@ -1,7 +1,7 @@
 import unittest
 
-from GetRungekuttaData import Util, GetRungekuttaData
-from PhysicsInformedNN import PhysicsInformedNN
+from Execution.GetRungekuttaData import Util, GetRungekuttaData
+from Execution.PhysicsInformedNN import PhysicsInformedNN
 
 
 class TestPINNs(unittest.TestCase):
