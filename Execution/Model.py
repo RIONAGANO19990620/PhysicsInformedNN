@@ -25,8 +25,7 @@ class PPINs(keras.Model):
             loss_2 = tf.reduce_mean(
                 tf.square(PPINs.f_pred(y_pred, x, self.a, self.b, self.c, self.d)))
             loss = tf.cond(loss_1 < 0.0155, lambda: loss_2, lambda: loss_1)"""
-            loss = tf.reduce_mean(tf.square(y - y_pred)) + tf.reduce_mean(tf.square(
-                PPINs.f_pred(y_pred, x, self.a, self.b, self.c, self.d))) + tf.reduce_mean(tf.square(y_pred[0, :] - y[0:, :])) \
+            loss = tf.reduce_mean(tf.square(y - y_pred))  + tf.reduce_mean(tf.square(y_pred[0, :] - y[0, :])) \
                    + tf.reduce_mean(tf.square(y_pred[:, 0] - y[:, 0])) + tf.reduce_mean(
                 tf.square(y_pred[:, -1] - y[:, -1]))
         trainable_vars = self.trainable_variables
