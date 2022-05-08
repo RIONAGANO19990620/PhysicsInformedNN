@@ -28,16 +28,8 @@ class PhysicsInformedNN:
         y = Model(inputs=input2, outputs=y)
         combined = concatenate([x.output, y.output])
         z = Dense(20, activation="tanh")(combined)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(20, activation='tanh')(z)
-        z = Dense(1, activation="tanh")(z)
-
+        for _ in range(8):
+            z = Dense(20, activation='tanh')(z)
         self.model = PPINs([x.input, y.input], z)
         self.model.compile(optimizer=tf.keras.optimizers.Adam(
             learning_rate=0.001),
