@@ -20,14 +20,16 @@ class PPINs(keras.Model):
 
         with tf.GradientTape() as tape:
             y_pred = self(x, training=True)
-            """loss_1 = tf.reduce_mean(tf.square(y - y_pred)) + tf.reduce_mean(
-                tf.square(y_pred[:, 0] - y_pred[:, -1]))
-            loss_2 = tf.reduce_mean(
-                tf.square(PPINs.f_pred(y_pred, x, self.a, self.b, self.c, self.d)))
-            loss = tf.cond(loss_1 < 0.0155, lambda: loss_2, lambda: loss_1)"""
-            loss = tf.reduce_mean(tf.square(y - y_pred))  + tf.reduce_mean(tf.square(y_pred[0, :] - y[0, :])) \
+            """loss_1 = tf.reduce_mean(tf.square(y - y_pred)) + tf.reduce_mean(tf.square(y_pred[0, :] - y[0, :])) \
                    + tf.reduce_mean(tf.square(y_pred[:, 0] - y[:, 0])) + tf.reduce_mean(
                 tf.square(y_pred[:, -1] - y[:, -1]))
+            loss_2 = tf.reduce_mean(
+                tf.square(PPINs.f_pred(y_pred, x, self.a, self.b, self.c, self.d))) + loss_1
+            loss = tf.cond(loss_1 < 0.01, lambda: loss_2, lambda: loss_1)"""
+            loss = tf.reduce_mean(tf.square(y - y_pred)) + tf.reduce_mean(tf.square(y_pred[0, :] - y[0, :])) \
+                   + tf.reduce_mean(tf.square(y_pred[:, 0] - y[:, 0])) + tf.reduce_mean(
+                tf.square(y_pred[:, -1] - y[:, -1])) \
+                   + tf.reduce_mean(tf.square(self.f_pred(y_pred, x, self.a, self.b, self.c, self.d)))
         trainable_vars = self.trainable_variables
         gradients = tape.gradient(loss, trainable_vars)
         self.optimizer.apply_gradients(zip(gradients, trainable_vars))
@@ -37,11 +39,13 @@ class PPINs(keras.Model):
                 'd': self.d}
 
     @staticmethod
-    def f_pred(y_pred, x, a, b, c, d):
-        u = y_pred
-        u_x, u_t = tf.gradients(y_pred, x[0]), tf.gradients(y_pred, x[1])
-        u_xx = tf.gradients(u_x, x[0])
-        u_xxx = tf.gradients(u_xx, x[0])
+    def f_pred(u, x, a: tf.Variable, b: tf.Variable, c: tf.Variable, d: tf.Variable):
+        x = x[0]
+        t = x[1]
+        u_x = tf.gradients(u, x)
+        u_t = tf.gradients(u, t)
+        u_xx = tf.gradients(u_x, x)
+        u_xxx = tf.gradients(u_xx, x)
         return u_t + a * u_x + b * u_xx + c * u_xxx + d * u * u_x
 
     @staticmethod
