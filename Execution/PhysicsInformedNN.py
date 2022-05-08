@@ -20,24 +20,28 @@ class PhysicsInformedNN:
         self.__initial_NN()
 
     def __initial_NN(self):
-        strategy = tf.distribute.MirroredStrategy()
-        with strategy.scope():
-            input1 = Input(shape=(1,))
-            input2 = Input(shape=(1,))
-            x = Dense(1, activation="tanh")(input1)
-            x = Model(inputs=input1, outputs=x)
-            y = Dense(1, activation="tanh")(input2)
-            y = Model(inputs=input2, outputs=y)
-            combined = concatenate([x.output, y.output])
-            z = Dense(20, activation="tanh")(combined)
-            for _ in range(8):
-                z = Dense(20, activation='tanh')(z)
-            z = Dense(1, activation="tanh")(z)
+        input1 = Input(shape=(1,))
+        input2 = Input(shape=(1,))
+        x = Dense(1, activation="tanh")(input1)
+        x = Model(inputs=input1, outputs=x)
+        y = Dense(1, activation="tanh")(input2)
+        y = Model(inputs=input2, outputs=y)
+        combined = concatenate([x.output, y.output])
+        z = Dense(20, activation="tanh")(combined)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(20, activation='tanh')(z)
+        z = Dense(1, activation="tanh")(z)
 
-            self.model = PPINs([x.input, y.input], z)
-            self.model.compile(optimizer=tf.keras.optimizers.Adam(
-                learning_rate=0.001),
-                metrics=['loss', 'mae', 'a', 'b', 'c', 'd'])
+        self.model = PPINs([x.input, y.input], z)
+        self.model.compile(optimizer=tf.keras.optimizers.Adam(
+            learning_rate=0.001),
+            metrics=['loss', 'mae', 'a', 'b', 'c', 'd'])
 
     def train(self, epochs=100):
         input_data = self.__get_input_data()

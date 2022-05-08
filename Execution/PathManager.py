@@ -3,7 +3,7 @@ import pathlib
 
 
 class PathManager:
-    __root_dir_name = 'PhsicsInfromedNN'
+    __root_dir_name = 'PhysicsInformedNN'
 
     @staticmethod
     def get_root_path():
