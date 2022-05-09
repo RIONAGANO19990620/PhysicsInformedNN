@@ -8,32 +8,38 @@ import tensorflow as tf
 
 import matplotlib.animation as animation
 
+from Execution.NormalizedData import NormalizedData
 from Execution.Model import PPINs
 
 
 class PhysicsInformedNN:
 
     def __init__(self, x_array, t_array, teacher_data):
-        self.x_array = (x_array - x_array.min()) / (x_array.max() - x_array.min())
-        self.t_array = (t_array - t_array.min()) / (t_array.max() - t_array.min())
-        self.teacher_data = teacher_data
+        self.normalized_data = NormalizedData(x_array, t_array, teacher_data)
+        self.x_array = self.normalized_data.normalized_x
+        self.t_array = self.normalized_data.normalized_t
+        self.teacher_data = self.normalized_data.normalized_u
         self.__initial_NN()
 
     def __initial_NN(self):
-        input1 = Input(shape=(1,))
-        input2 = Input(shape=(1,))
-        x = Dense(1, activation="tanh")(input1)
-        x = Model(inputs=input1, outputs=x)
-        y = Dense(1, activation="tanh")(input2)
-        y = Model(inputs=input2, outputs=y)
-        combined = concatenate([x.output, y.output])
-        z = Dense(20, activation="tanh")(combined)
-        for _ in range(8):
-            z = Dense(20, activation='tanh')(z)
-        self.model = PPINs([x.input, y.input], z)
-        self.model.compile(optimizer=tf.keras.optimizers.Adam(
-            learning_rate=0.001),
-            metrics=['loss', 'mae', 'a', 'b', 'c', 'd'])
+        strategy = tf.distribute.MirroredStrategy()
+        with strategy.scope():
+            input1 = Input(shape=(1,))
+            input2 = Input(shape=(1,))
+            x = Dense(1, activation="tanh")(input1)
+            x = Model(inputs=input1, outputs=x)
+            y = Dense(1, activation="tanh")(input2)
+            y = Model(inputs=input2, outputs=y)
+            combined = concatenate([x.output, y.output])
+            z = Dense(20, activation="tanh")(combined)
+            for _ in range(8):
+                z = Dense(20, activation='tanh')(z)
+            z = Dense(1, activation="tanh")(z)
+
+            self.model = PPINs(self.normalized_data, [x.input, y.input], z)
+            self.model.compile(optimizer=tf.keras.optimizers.Adam(
+                learning_rate=0.001),
+                metrics=['loss', 'mae', 'a', 'b', 'c', 'd'])
 
     def train(self, epochs=100):
         input_data = self.__get_input_data()

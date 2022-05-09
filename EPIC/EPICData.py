@@ -26,5 +26,5 @@ class EPICData:
 
     @property
     def teacher_data(self) -> np.ndarray:
-        teacher_data = np.array(self.data).flatten()[:, None]
-        return (teacher_data - teacher_data.min()) / (teacher_data.max() - teacher_data.min())
+        return np.array(self.data).flatten()[:, None]
+
