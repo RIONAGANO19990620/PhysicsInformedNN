@@ -2,18 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd39a167-88f8-49d4-9110-ac3542532fa8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/PhysicsInformedNN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PhysicsInformedNN.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Data/EPIC/data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Data/EPIC/data.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Data/EPIC/epic_coeffisient.png" beforeDir="false" afterPath="$PROJECT_DIR$/Data/EPIC/epic_coeffisient.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Data/EPIC/pred_data.gif" beforeDir="false" afterPath="$PROJECT_DIR$/Data/EPIC/pred_data.gif" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EPIC/EPICData.py" beforeDir="false" afterPath="$PROJECT_DIR$/EPIC/EPICData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Kdv/data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Kdv/data.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Kdv/kdv_coeffisient.png" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Kdv/kdv_coeffisient.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Kdv/pred_data.gif" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Kdv/pred_data.gif" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Execution/Model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Execution/Model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Execution/PhysicsInformedNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/Execution/PhysicsInformedNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/testGPU.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/testGPU.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +46,7 @@
       <updated>1652077779819</updated>
       <workItem from="1652077781252" duration="275000" />
       <workItem from="1652078433925" duration="605000" />
+      <workItem from="1652084926145" duration="15045000" />
     </task>
     <servers />
   </component>

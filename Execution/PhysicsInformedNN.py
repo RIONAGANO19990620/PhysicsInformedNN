@@ -7,9 +7,16 @@ from tensorflow.keras.layers import concatenate, Dense, Input
 import tensorflow as tf
 
 import matplotlib.animation as animation
+from tensorflow.python.keras.callbacks import EarlyStopping
 
 from Execution.NormalizedData import NormalizedData
 from Execution.Model import PPINs
+
+early_stopping = EarlyStopping(
+    monitor='val_loss',
+    min_delta=0.0,
+    patience=2,
+)
 
 
 class PhysicsInformedNN:
@@ -43,7 +50,7 @@ class PhysicsInformedNN:
 
     def train(self, epochs=100):
         input_data = self.__get_input_data()
-        self.history = self.model.fit(input_data, self.teacher_data, epochs=epochs)
+        self.history = self.model.fit(input_data, self.teacher_data, epochs=epochs, callbacks=[early_stopping])
 
     def plot_coefficient(self):
         plt.plot(self.history.history['a'], label='a')

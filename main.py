@@ -17,7 +17,7 @@ def pred_advection(train_num=100):
     advection.save_plot_coeffisient('advection', path)
 
 
-def pred_kdv(train_num=100):
+def pred_kdv(train_num=500):
     teacher_data, data = GetRungekuttaData.get_kdv()
     kdv = PhysicsInformedNN(x_array, t_array, teacher_data)
     kdv.train(train_num)
@@ -47,7 +47,7 @@ def pred_advection_diffusion(train_num=100):
     advection_diffusion.save_plot_coeffisient('advection_diffusion', path)
 
 
-def pred_epic_data(train_num=1000):
+def pred_epic_data(train_num=100):
     path = './EPIC/Ion_Density_y'
     epic_data = EPICData(path)
     epic = PhysicsInformedNN(epic_data.x_array, epic_data.t_array, epic_data.teacher_data)
@@ -59,4 +59,4 @@ def pred_epic_data(train_num=1000):
 
 
 if __name__ == '__main__':
-    pred_epic_data(100)
+    pred_burgers(500)

@@ -5,7 +5,7 @@ from tensorflow import keras
 from Execution import NormalizedData
 
 loss_tracker = keras.metrics.Mean(name="loss")
-mae_metric = keras.metrics.MeanAbsoluteError(name="mae")
+mae_metric = keras.metrics.RootMeanSquaredError(name="mae")
 
 
 class PPINs(keras.Model):
@@ -29,10 +29,10 @@ class PPINs(keras.Model):
                 tf.square(PPINs.f_pred(y_pred, x, self.a, self.b, self.c, self.d)))
             loss = tf.cond(loss_1 < 0.0155, lambda: loss_2, lambda: loss_1)"""
             loss = tf.reduce_mean(tf.square(y - y_pred)) + tf.reduce_mean(tf.square(
-                self.kdv_pred_for_normalize(y_pred, x, self.a, self.b, self.c, self.d, self.normalized_data.u_max,
-                                          self.normalized_data.u_min, self.normalized_data.t_max,
-                                          self.normalized_data.t_min, self.normalized_data.x_max,
-                                          self.normalized_data.x_min))) + tf.reduce_mean(
+                self.all_f(y_pred, x, self.a, self.b, self.c, self.d, self.normalized_data.u_max,
+                         self.normalized_data.u_min, self.normalized_data.t_max,
+                         self.normalized_data.t_min, self.normalized_data.x_max,
+                         self.normalized_data.x_min))) + tf.reduce_mean(
                 tf.square(y_pred[0, :] - y[0, :])) \
                    + tf.reduce_mean(tf.square(y_pred[:, 0] - y[:, 0])) + tf.reduce_mean(
                 tf.square(y_pred[:, -1] - y[:, -1]))
@@ -45,7 +45,7 @@ class PPINs(keras.Model):
                 'd': self.d}
 
     @staticmethod
-    def f_pred_for_normalize(y_pred, x, a, b, c, d, u_max, u_min, t_max, t_min, x_max, x_min):
+    def all_f(y_pred, x, a, b, c, d, u_max, u_min, t_max, t_min, x_max, x_min):
         u = y_pred
         u_x, u_t = tf.gradients(y_pred, x[0]), tf.gradients(y_pred, x[1])
         u_xx = tf.gradients(u_x, x[0])
@@ -56,7 +56,7 @@ class PPINs(keras.Model):
             x_max - x_min) * u_x
 
     @staticmethod
-    def kdv_pred_for_normalize(y_pred, x, a, b, c, d, u_max, u_min, t_max, t_min, x_max, x_min):
+    def kdv(y_pred, x, a, b, c, d, u_max, u_min, t_max, t_min, x_max, x_min):
         u = y_pred
         u_x, u_t = tf.gradients(y_pred, x[0]), tf.gradients(y_pred, x[1])
         u_xx = tf.gradients(u_x, x[0])
@@ -66,17 +66,17 @@ class PPINs(keras.Model):
             x_max - x_min) * u_x
 
     @staticmethod
-    def f_pred(y_pred, x, a, b, c, d):
+    def advection_diffusion(y_pred, x, a, b, c, d, u_max, u_min, t_max, t_min, x_max, x_min):
         u = y_pred
         u_x, u_t = tf.gradients(y_pred, x[0]), tf.gradients(y_pred, x[1])
         u_xx = tf.gradients(u_x, x[0])
-        u_xxx = tf.gradients(u_xx, x[0])
-        return u_t + a * u_x + b * u_xx + c * u_xxx + d * u * u_x
+        return tf.divide(u_t, t_max - t_min) + a * tf.divide(u_x, x_max - x_min) + b * tf.divide(u_xx,
+                                                                                                 (x_max - x_min) ** 2)
 
     @staticmethod
-    def kdv_format(y_pred, x, c, d):
+    def burgers(y_pred, x, a, b, c, d, u_max, u_min, t_max, t_min, x_max, x_min):
         u = y_pred
         u_x, u_t = tf.gradients(y_pred, x[0]), tf.gradients(y_pred, x[1])
         u_xx = tf.gradients(u_x, x[0])
-        u_xxx = tf.gradients(u_xx, x[0])
-        return u_t + c * u_xxx + d * u * u_x
+        return tf.divide(u_t, t_max - t_min) + b * tf.divide(u_xx, (x_max - x_min) ** 2) + d * u_x * tf.divide(
+            u * (u_max - u_min) + u_min, x_max - x_min)
